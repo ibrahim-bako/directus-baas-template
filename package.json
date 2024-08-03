@@ -1,0 +1,12 @@
+{
+  "name": "@app/baas",
+  "version": "0.0.0",
+  "scripts": {
+    "baas:push": "npx directus-sync push -f --config-path ./directus-sync.config.js",
+    "baas:pull": "npx directus-sync pull --config-path ./directus-sync.config.js",
+    "baas:diff": "npx directus-sync diff --config-path ./directus-sync.config.js"
+  },
+  "dependencies": {
+    "directus-sync": "^1.5.3"
+  }
+}

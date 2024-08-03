@@ -1,0 +1,62 @@
+services:
+  database:
+    image: postgis/postgis:13-master
+    # Required when running on platform other than amd64, like Apple M1/M2:
+    platform: linux/amd64
+    volumes:
+      - .data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: "directus"
+      POSTGRES_DB: "directus"
+
+  cache:
+    image: redis:6
+
+  directus:
+    image: directus/directus:10.13.1
+    # build:
+    #   context: ./baas
+    #   dockerfile: Dockerfile
+    ports:
+      - 8055:${DIRECTUS_PORT}
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    depends_on:
+      - cache
+      - database
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+
+      HOST: ${DIRECTUS_HOST}
+      PORT: ${DIRECTUS_PORT}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+
+      DB_CLIENT: ${DIRECTUS_DB_CLIENT}
+      DB_HOST: ${DIRECTUS_DB_HOST}
+      DB_PORT: ${DIRECTUS_DB_PORT}
+      DB_DATABASE: ${DIRECTUS_DB_DATABASE}
+      DB_USER: ${DIRECTUS_DB_USER}
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+
+      CACHE_ENABLED: ${DIRECTUS_CACHE_ENABLED}
+      CACHE_STORE: ${DIRECTUS_CACHE_STORE}
+      REDIS: ${DIRECTUS_REDIS}
+
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+
+      CORS_ENABLED: ${DIRECTUS_CORS_ENABLED}
+      CORS_ORIGIN: ${DIRECTUS_CORS_ORIGIN}
+      CORS_METHODS: ${DIRECTUS_CORS_METHODS}
+      CORS_ALLOWED_HEADERS: ${DIRECTUS_CORS_ALLOWED_HEADERS}
+      CORS_EXPOSED_HEADERS: ${DIRECTUS_CORS_EXPOSED_HEADERS}
+      CORS_CREDENTIALS: ${DIRECTUS_CORS_CREDENTIALS}
+      CORS_MAX_AGE: ${DIRECTUS_CORS_MAX_AGE}
+
+      EXTENSIONS_PATH: ${DIRECTUS_EXTENSIONS_PATH}
+      EXTENSIONS_AUTO_RELOAD: ${DIRECTUS_EXTENSIONS_AUTO_RELOAD}
+      EXTENSIONS_MUST_LOAD: ${DIRECTUS_EXTENSIONS_MUST_LOAD}
+
